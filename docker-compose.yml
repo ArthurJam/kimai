@@ -1,0 +1,55 @@
+services:
+    sqldb:
+        image: mysql:8.3
+        volumes:
+            - mysql:/var/lib/mysql
+        environment:
+            MYSQL_DATABASE: kimai
+            MYSQL_USER: kimai
+            MYSQL_PASSWORD: uja5ohh0vahCheibahsh3nie
+            MYSQL_ROOT_PASSWORD: aigh7ao0Eij1EiCheeVae3ua
+        command: --default-storage-engine innodb
+        restart: unless-stopped
+        healthcheck:
+            test: mysqladmin -p$$MYSQL_ROOT_PASSWORD ping -h localhost
+            interval: 20s
+            start_period: 10s
+            timeout: 10s
+            retries: 3
+
+    nginx:
+        image: nginx:latest
+        ports:
+            - 80
+        volumes:
+            - public:/opt/kimai/public:ro
+            - .docker/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+        restart: unless-stopped
+        depends_on:
+            - kimai
+        healthcheck:
+            test:  wget --spider http://nginx/health || exit 1
+            interval: 20s
+            start_period: 10s
+            timeout: 10s
+            retries: 3
+
+    kimai:
+        image: kimai/kimai2:latest
+        expose:
+            - 9000
+        environment:
+            ADMINMAIL: arthur63@gmail.com
+            ADMINPASS: GaosheiRool9ceizie9oSh6o
+            DATABASE_URL: "mysql://kimai:uja5ohh0vahCheibahsh3nie@sqldb/kimai?charset=utf8mb4&serverVersion=8.3.0"
+        volumes:
+            - public:/opt/kimai/public
+            - plugins:/opt/kimai/var/plugins
+            - data:/opt/kimai/var/data
+        restart: unless-stopped
+
+volumes:
+    data:
+    public:
+    mysql:
+    plugins:
