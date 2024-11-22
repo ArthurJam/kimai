@@ -1,0 +1,14 @@
+{
+    "name": "aja/absence-bundle",
+    "description": "A plugin for Kimai, which add support for absences",
+    "type": "kimai-plugin",
+    "version": "0.1",
+    "license": "MIT",
+    "authors": [],
+    "extra": {
+        "kimai": {
+            "require": 20000,
+            "name": "absence bundle"
+        }
+    }
+}
